@@ -1040,7 +1040,7 @@ function defaultQuotation(){
     number: '', date: '', validity: '',
     custName: '', custCompany: '', custPhone: '', custAddress: '',
     items: [ { name:'', spec:'', qty:1, price:0 } ],
-    discount: 0, notes: '',
+    discount: 0, taxes: [], notes: '',
   };
 }
 function loadQuotationState(){
@@ -1049,6 +1049,7 @@ function loadQuotationState(){
     if(!raw) return defaultQuotation();
     const parsed = JSON.parse(raw);
     if(!parsed || !Array.isArray(parsed.items) || parsed.items.length === 0) return defaultQuotation();
+    if(!Array.isArray(parsed.taxes)) parsed.taxes = [];
     return Object.assign(defaultQuotation(), parsed);
   }catch(e){
     return defaultQuotation();
@@ -1122,9 +1123,11 @@ function renderQuotation(el){
       </div>
       <button class="btn-ghost" style="margin-top:12px;" onclick="addQuotationItem()">${L('quotationAddItem')}</button>
 
-      <div class="result-box" style="margin-top:18px; max-width:320px; margin-left:auto;">
+      <div class="result-box" style="margin-top:18px; max-width:340px; margin-left:auto;">
         <div class="result-row"><span class="result-label">${L('quotationSubtotal')}</span><span class="result-value" id="q_subtotal">0</span></div>
         <div class="result-row"><span class="result-label">${L('quotationDiscount')}</span><span class="result-value"><input type="text" id="q_discount" style="width:90px; text-align:right; padding:6px 8px;" value="${escapeAttr(q.discount || 0)}" oninput="recalcQuotationTotals()"></span></div>
+        <div id="q_taxesList"></div>
+        <button class="btn-ghost" style="margin:8px 0 4px; font-size:12px; padding:6px 10px;" onclick="addQuotationTax()">${L('quotationAddTax')}</button>
         <div class="result-row"><span class="result-label">${L('quotationGrandTotal')}</span><span class="result-value big green" id="q_grandTotal">0</span></div>
       </div>
     </div>
@@ -1143,6 +1146,7 @@ function renderQuotation(el){
   `;
 
   renderQuotationItemsBody();
+  renderQuotationTaxesList();
   recalcQuotationTotals();
   saveQuotationState();
 }
@@ -1190,6 +1194,43 @@ function removeQuotationItem(i){
   recalcQuotationTotals();
 }
 
+function renderQuotationTaxesList(){
+  const wrap = document.getElementById('q_taxesList');
+  if(!wrap) return;
+  const taxes = STATE.quotation.taxes;
+  wrap.innerHTML = taxes.map((t, i) => `
+    <div class="tax-row">
+      <input type="text" style="flex:1; min-width:0; padding:6px 8px; font-size:12.5px;" placeholder="${L('quotationTaxNamePh')}" value="${escapeAttr(t.name)}" oninput="updateQuotationTax(${i},'name',this.value)">
+      <input type="text" style="width:64px; padding:6px 6px; font-size:12.5px; text-align:right;" value="${t.value}" oninput="updateQuotationTax(${i},'value',this.value)">
+      <select style="width:60px; padding:6px 4px; font-size:12px;" onchange="updateQuotationTax(${i},'type',this.value)">
+        <option value="percent" ${t.type !== 'fixed' ? 'selected' : ''}>%</option>
+        <option value="fixed" ${t.type === 'fixed' ? 'selected' : ''}>Rs</option>
+      </select>
+      <span class="result-value mono" id="q_taxAmt_${i}" style="min-width:56px; text-align:right; font-size:12.5px;">0</span>
+      <button class="btn-ghost" style="padding:4px 8px; font-size:11px;" onclick="removeQuotationTax(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function addQuotationTax(){
+  STATE.quotation.taxes.push({ name:'', value:0, type:'percent' });
+  renderQuotationTaxesList();
+  recalcQuotationTotals();
+}
+
+function removeQuotationTax(i){
+  STATE.quotation.taxes.splice(i, 1);
+  renderQuotationTaxesList();
+  recalcQuotationTotals();
+}
+
+function updateQuotationTax(i, field, value){
+  const taxes = STATE.quotation.taxes;
+  if(!taxes[i]) return;
+  taxes[i][field] = field === 'value' ? (parseFloat(value) || 0) : value;
+  recalcQuotationTotals();
+}
+
 function updateQuotationMeta(){
   const g = id => document.getElementById(id);
   const q = STATE.quotation;
@@ -1209,7 +1250,17 @@ function recalcQuotationTotals(){
   const subtotal = items.reduce((s, it) => s + (it.qty * it.price), 0);
   const discount = parseFloat(document.getElementById('q_discount')?.value) || 0;
   STATE.quotation.discount = discount;
-  const grand = Math.max(subtotal - discount, 0);
+
+  const taxes = STATE.quotation.taxes;
+  let taxTotal = 0;
+  taxes.forEach((t, i) => {
+    const amt = t.type === 'fixed' ? (t.value || 0) : (subtotal * (t.value || 0) / 100);
+    taxTotal += amt;
+    const span = document.getElementById('q_taxAmt_' + i);
+    if(span) span.textContent = fmt(amt, 0);
+  });
+
+  const grand = Math.max(subtotal - discount + taxTotal, 0);
   const st = document.getElementById('q_subtotal'); if(st) st.textContent = fmt(subtotal, 0);
   const gt = document.getElementById('q_grandTotal'); if(gt) gt.textContent = fmt(grand, 0);
   saveQuotationState();
@@ -1237,7 +1288,15 @@ function downloadQuotationPdf(){
   `).join('');
   const subtotal = q.items.reduce((s, it) => s + (it.qty * it.price), 0);
   const discount = q.discount || 0;
-  const grand = Math.max(subtotal - discount, 0);
+  const taxes = q.taxes || [];
+  let taxTotal = 0;
+  const taxRowsHtml = taxes.map(t => {
+    const amt = t.type === 'fixed' ? (t.value || 0) : (subtotal * (t.value || 0) / 100);
+    taxTotal += amt;
+    const label = (escapeHtml(t.name) || L('quotationTaxesTotal')) + (t.type === 'fixed' ? '' : ` (${fmt(t.value,0)}%)`);
+    return `<tr><td>${label}</td><td>${fmt(amt, 0)}</td></tr>`;
+  }).join('');
+  const grand = Math.max(subtotal - discount + taxTotal, 0);
 
   const html = `
     <div class="rep-header quote-header">
@@ -1275,6 +1334,7 @@ function downloadQuotationPdf(){
     <table class="rep-summary" style="max-width:320px; margin-left:auto;">
       <tr><td>${L('quotationSubtotal')}</td><td>${fmt(subtotal, 0)}</td></tr>
       ${discount ? `<tr><td>${L('quotationDiscount')}</td><td>-${fmt(discount, 0)}</td></tr>` : ''}
+      ${taxRowsHtml}
       <tr><td><strong>${L('quotationGrandTotal')}</strong></td><td><strong>${fmt(grand, 0)}</strong></td></tr>
     </table>
 
