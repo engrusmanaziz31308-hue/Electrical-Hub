@@ -304,8 +304,43 @@
 
   @media(max-width:600px){
     .field-row{ flex-direction:column; gap:0; }
+    .field-row > div{ width:100%; }
     .home-hero{ padding:24px 18px; }
+    .topbar-inner{ padding:12px 14px; }
+    nav.mainnav{ padding:0 14px; }
+    main{ padding:20px 14px 50px; }
+    h1.page-title{ font-size:23px; }
+    .page-desc{ font-size:13.5px; margin-bottom:20px; }
+    .card{ padding:16px; }
+    .brand-name{ font-size:15px; }
+    .brand-name small{ font-size:9px; }
+    .brand-mark{ width:30px; height:30px; font-size:13px; }
+    table{ font-size:12.5px; }
+    th, td{ padding:8px 7px; }
+    .home-hero h1{ font-size:22px; }
+    .tool-card{ padding:16px; }
   }
+
+  @media(max-width:420px){
+    .lang-toggle button{ padding:6px 10px; font-size:12px; }
+    .brand-name{ font-size:13.5px; }
+    .btn, .btn-ghost{ padding:10px 14px; font-size:13px; }
+  }
+
+  /* ---------- Touch-friendly tap targets (mobile app) ---------- */
+  input[type="text"], input[type="checkbox"], select, button{
+    -webkit-tap-highlight-color: rgba(156,101,8,0.15);
+  }
+  input[type="checkbox"]{
+    width:19px; height:19px; accent-color: var(--amber); cursor:pointer;
+  }
+  .btn, .btn-ghost, nav.mainnav button, .lang-toggle button, .subtabs button{
+    min-height:40px; touch-action: manipulation;
+  }
+  input[type="text"], select{
+    min-height:40px; touch-action: manipulation;
+  }
+  .qty-input{ min-height:36px; }
 
   /* ---------- PDF report (print) ---------- */
   #printArea{ display:none; }
