@@ -5,6 +5,7 @@ const STATE = {
   load: {},          // per-appliance {checked, qty, hrs, watt}
   customLoads: [],   // user-added loads {id, name, watt, qty, hrs, checked}
   solar: { dailyEnergy: 3000, peakLoad: 1000, sentFromLoad:false },
+  quotation: loadQuotationState(),
 };
 
 APPLIANCES.forEach(a => {
@@ -21,6 +22,7 @@ const NAV_ITEMS = [
   { key:'wire', labelKey:'navWire' },
   { key:'converter', labelKey:'navConverter' },
   { key:'glossary', labelKey:'navGlossary' },
+  { key:'quotation', labelKey:'navQuotation' },
 ];
 
 // ============ Language ============
@@ -68,6 +70,7 @@ function renderPage(page){
     wire: renderWire,
     converter: renderConverter,
     glossary: renderGlossary,
+    quotation: renderQuotation,
   };
   main.innerHTML = '<div class="page active" id="pageWrap"></div>';
   (renderers[page] || renderHome)(document.getElementById('pageWrap'));
@@ -85,6 +88,7 @@ function renderHome(el){
     { icon:'⏚', titleKey:'toolWireTitle', descKey:'toolWireDesc', page:'wire' },
     { icon:'⇄', titleKey:'toolConverterTitle', descKey:'toolConverterDesc', page:'converter' },
     { icon:'?', titleKey:'toolGlossaryTitle', descKey:'toolGlossaryDesc', page:'glossary' },
+    { icon:'🧾', titleKey:'toolQuotationTitle', descKey:'toolQuotationDesc', page:'quotation' },
   ];
   el.innerHTML = `
     <div class="home-hero">
@@ -375,7 +379,7 @@ function renderSolar(el){
     </div>
 
     <div class="card" style="margin-top:16px;">
-      <h3>${L('solarDcCard')} <span class="tag">⏚</span></h3>
+      <h3>${L('solarDcCard')} <span class="tag">${L('dcTag')} ⏚</span></h3>
       <div class="result-box" id="r_dcWiring"></div>
       <p class="note">${L('solarDcNote')}</p>
     </div>
@@ -1028,6 +1032,262 @@ function filterGlossary(){
       ${(isUr ? g.detail_ur : g.detail_en) ? `<div class="def" style="margin-top:6px; color:var(--text-faint);">${isUr ? g.detail_ur : g.detail_en}</div>` : ''}
     </div>
   `).join('');
+}
+
+// ============ QUOTATION MAKER ============
+function defaultQuotation(){
+  return {
+    number: '', date: '', validity: '',
+    custName: '', custCompany: '', custPhone: '', custAddress: '',
+    items: [ { name:'', spec:'', qty:1, price:0 } ],
+    discount: 0, notes: '',
+  };
+}
+function loadQuotationState(){
+  try{
+    const raw = localStorage.getItem('eh_quotation');
+    if(!raw) return defaultQuotation();
+    const parsed = JSON.parse(raw);
+    if(!parsed || !Array.isArray(parsed.items) || parsed.items.length === 0) return defaultQuotation();
+    return Object.assign(defaultQuotation(), parsed);
+  }catch(e){
+    return defaultQuotation();
+  }
+}
+function saveQuotationState(){
+  try{ localStorage.setItem('eh_quotation', JSON.stringify(STATE.quotation)); }catch(e){}
+}
+function genQuotationNumber(){
+  const d = new Date();
+  const ymd = d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0');
+  return 'Q-' + ymd + '-' + String(Math.floor(100 + Math.random()*900));
+}
+function todayStr(){
+  const d = new Date();
+  return String(d.getDate()).padStart(2,'0') + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + d.getFullYear();
+}
+function escapeAttr(s){
+  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+}
+function escapeHtml(s){
+  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderQuotation(el){
+  const q = STATE.quotation;
+  if(!q.number) q.number = genQuotationNumber();
+  if(!q.date) q.date = todayStr();
+
+  el.innerHTML = `
+    <div class="eyebrow">${L('navQuotation')}</div>
+    <h1 class="page-title">${L('quotationPageTitle')}</h1>
+    <p class="page-desc">${L('quotationPageDesc')}</p>
+
+    <div class="card" style="margin-bottom:16px;">
+      <h3>${L('quotationMetaCard')} <span class="tag">#</span></h3>
+      <div class="field-row">
+        <div class="field"><label>${L('quotationNumber')}</label><input type="text" id="q_number" value="${escapeAttr(q.number)}" oninput="updateQuotationMeta()"></div>
+        <div class="field"><label>${L('quotationDate')}</label><input type="text" id="q_date" value="${escapeAttr(q.date)}" oninput="updateQuotationMeta()"></div>
+        <div class="field"><label>${L('quotationValidity')}</label><input type="text" id="q_validity" placeholder="${L('quotationValidityPh')}" value="${escapeAttr(q.validity)}" oninput="updateQuotationMeta()"></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <h3>${L('quotationCustomerCard')} <span class="tag">☺</span></h3>
+      <div class="field-row">
+        <div class="field"><label>${L('custName')}</label><input type="text" id="q_custName" value="${escapeAttr(q.custName)}" oninput="updateQuotationMeta()"></div>
+        <div class="field"><label>${L('custCompany')}</label><input type="text" id="q_custCompany" value="${escapeAttr(q.custCompany)}" oninput="updateQuotationMeta()"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>${L('custPhone')}</label><input type="text" id="q_custPhone" value="${escapeAttr(q.custPhone)}" oninput="updateQuotationMeta()"></div>
+        <div class="field"><label>${L('custAddress')}</label><input type="text" id="q_custAddress" value="${escapeAttr(q.custAddress)}" oninput="updateQuotationMeta()"></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <h3>${L('quotationItemsCard')} <span class="tag">Σ</span></h3>
+      <div style="overflow-x:auto;">
+      <table>
+        <thead><tr>
+          <th style="width:36px;">${L('colSr')}</th>
+          <th style="min-width:140px;">${L('colItemName')}</th>
+          <th style="min-width:160px;">${L('colSpecification')}</th>
+          <th style="width:64px;">${L('colQty')}</th>
+          <th style="width:100px;">${L('colUnitPrice')}</th>
+          <th style="width:100px;">${L('colAmount')}</th>
+          <th style="width:36px;"></th>
+        </tr></thead>
+        <tbody id="q_itemsBody"></tbody>
+      </table>
+      </div>
+      <button class="btn-ghost" style="margin-top:12px;" onclick="addQuotationItem()">${L('quotationAddItem')}</button>
+
+      <div class="result-box" style="margin-top:18px; max-width:320px; margin-left:auto;">
+        <div class="result-row"><span class="result-label">${L('quotationSubtotal')}</span><span class="result-value" id="q_subtotal">0</span></div>
+        <div class="result-row"><span class="result-label">${L('quotationDiscount')}</span><span class="result-value"><input type="text" id="q_discount" style="width:90px; text-align:right; padding:6px 8px;" value="${escapeAttr(q.discount || 0)}" oninput="recalcQuotationTotals()"></span></div>
+        <div class="result-row"><span class="result-label">${L('quotationGrandTotal')}</span><span class="result-value big green" id="q_grandTotal">0</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <h3>${L('quotationNotesCard')} <span class="tag">i</span></h3>
+      <div class="field">
+        <textarea id="q_notes" rows="3" placeholder="${L('quotationNotesPh')}" oninput="updateQuotationMeta()">${escapeHtml(q.notes)}</textarea>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn" onclick="downloadQuotationPdf()">${L('quotationDownloadPdf')}</button>
+      <button class="btn-ghost" onclick="clearQuotationForm()">${L('quotationClear')}</button>
+    </div>
+  `;
+
+  renderQuotationItemsBody();
+  recalcQuotationTotals();
+  saveQuotationState();
+}
+
+function renderQuotationItemsBody(){
+  const body = document.getElementById('q_itemsBody');
+  if(!body) return;
+  const items = STATE.quotation.items;
+  body.innerHTML = items.map((it, i) => `
+    <tr>
+      <td class="mono">${i+1}</td>
+      <td><input type="text" value="${escapeAttr(it.name)}" oninput="updateQuotationItem(${i},'name',this.value)"></td>
+      <td><input type="text" value="${escapeAttr(it.spec)}" oninput="updateQuotationItem(${i},'spec',this.value)"></td>
+      <td><input type="text" class="qty-input" value="${it.qty}" oninput="updateQuotationItem(${i},'qty',this.value)"></td>
+      <td><input type="text" class="mono" value="${it.price}" oninput="updateQuotationItem(${i},'price',this.value)"></td>
+      <td class="mono" id="q_amt_${i}">${fmt(it.qty * it.price, 0)}</td>
+      <td><button class="btn-ghost" style="padding:6px 9px; font-size:12px;" onclick="removeQuotationItem(${i})" title="${L('quotationClear')}">✕</button></td>
+    </tr>
+  `).join('') || `<tr><td colspan="7" style="text-align:center; color:var(--text-faint);">${L('noResults')}</td></tr>`;
+}
+
+function updateQuotationItem(i, field, value){
+  const items = STATE.quotation.items;
+  if(!items[i]) return;
+  if(field === 'qty' || field === 'price'){
+    items[i][field] = parseFloat(value) || 0;
+    const cell = document.getElementById('q_amt_' + i);
+    if(cell) cell.textContent = fmt(items[i].qty * items[i].price, 0);
+  } else {
+    items[i][field] = value;
+  }
+  recalcQuotationTotals();
+}
+
+function addQuotationItem(){
+  STATE.quotation.items.push({ name:'', spec:'', qty:1, price:0 });
+  renderQuotationItemsBody();
+  recalcQuotationTotals();
+}
+
+function removeQuotationItem(i){
+  STATE.quotation.items.splice(i, 1);
+  if(STATE.quotation.items.length === 0) STATE.quotation.items.push({ name:'', spec:'', qty:1, price:0 });
+  renderQuotationItemsBody();
+  recalcQuotationTotals();
+}
+
+function updateQuotationMeta(){
+  const g = id => document.getElementById(id);
+  const q = STATE.quotation;
+  if(g('q_number')) q.number = g('q_number').value;
+  if(g('q_date')) q.date = g('q_date').value;
+  if(g('q_validity')) q.validity = g('q_validity').value;
+  if(g('q_custName')) q.custName = g('q_custName').value;
+  if(g('q_custCompany')) q.custCompany = g('q_custCompany').value;
+  if(g('q_custPhone')) q.custPhone = g('q_custPhone').value;
+  if(g('q_custAddress')) q.custAddress = g('q_custAddress').value;
+  if(g('q_notes')) q.notes = g('q_notes').value;
+  saveQuotationState();
+}
+
+function recalcQuotationTotals(){
+  const items = STATE.quotation.items;
+  const subtotal = items.reduce((s, it) => s + (it.qty * it.price), 0);
+  const discount = parseFloat(document.getElementById('q_discount')?.value) || 0;
+  STATE.quotation.discount = discount;
+  const grand = Math.max(subtotal - discount, 0);
+  const st = document.getElementById('q_subtotal'); if(st) st.textContent = fmt(subtotal, 0);
+  const gt = document.getElementById('q_grandTotal'); if(gt) gt.textContent = fmt(grand, 0);
+  saveQuotationState();
+}
+
+function clearQuotationForm(){
+  if(!confirm(L('quotationClearConfirm'))) return;
+  STATE.quotation = defaultQuotation();
+  saveQuotationState();
+  renderQuotation(document.getElementById('pageWrap'));
+}
+
+function downloadQuotationPdf(){
+  updateQuotationMeta();
+  const q = STATE.quotation;
+  const rows = q.items.map((it, i) => `
+    <tr>
+      <td>${i+1}</td>
+      <td>${escapeHtml(it.name) || '-'}</td>
+      <td>${escapeHtml(it.spec) || '-'}</td>
+      <td>${fmt(it.qty, 0)}</td>
+      <td>${fmt(it.price, 0)}</td>
+      <td>${fmt(it.qty * it.price, 0)}</td>
+    </tr>
+  `).join('');
+  const subtotal = q.items.reduce((s, it) => s + (it.qty * it.price), 0);
+  const discount = q.discount || 0;
+  const grand = Math.max(subtotal - discount, 0);
+
+  const html = `
+    <div class="rep-header quote-header">
+      <div class="quote-brand">
+        <img src="icon-512.png" alt="logo">
+        <div>
+          <div class="rep-brand">${L('brandName')}</div>
+          <div class="quote-tag">${L('brandTag')}</div>
+        </div>
+      </div>
+      <div class="quote-titleblock">
+        <h1>${L('quotationPrintTitle')}</h1>
+        <div class="rep-meta">${L('quotationNumber')}: ${escapeHtml(q.number)}</div>
+        <div class="rep-meta">${L('quotationDate')}: ${escapeHtml(q.date)}</div>
+        ${q.validity ? `<div class="rep-meta">${L('quotationValidity')}: ${escapeHtml(q.validity)}</div>` : ''}
+      </div>
+    </div>
+
+    <div class="rep-subhead">${L('quotationCustomerCard')}</div>
+    <table class="rep-summary">
+      <tr><td>${L('custName')}</td><td>${escapeHtml(q.custName) || '-'}</td></tr>
+      <tr><td>${L('custCompany')}</td><td>${escapeHtml(q.custCompany) || '-'}</td></tr>
+      <tr><td>${L('custPhone')}</td><td>${escapeHtml(q.custPhone) || '-'}</td></tr>
+      <tr><td>${L('custAddress')}</td><td>${escapeHtml(q.custAddress) || '-'}</td></tr>
+    </table>
+
+    <table class="rep-table">
+      <thead><tr>
+        <th>${L('colSr')}</th><th>${L('colItemName')}</th><th>${L('colSpecification')}</th>
+        <th>${L('colQty')}</th><th>${L('colUnitPrice')}</th><th>${L('colAmount')}</th>
+      </tr></thead>
+      <tbody>${rows || `<tr><td colspan="6">${L('noResults')}</td></tr>`}</tbody>
+    </table>
+
+    <table class="rep-summary" style="max-width:320px; margin-left:auto;">
+      <tr><td>${L('quotationSubtotal')}</td><td>${fmt(subtotal, 0)}</td></tr>
+      ${discount ? `<tr><td>${L('quotationDiscount')}</td><td>-${fmt(discount, 0)}</td></tr>` : ''}
+      <tr><td><strong>${L('quotationGrandTotal')}</strong></td><td><strong>${fmt(grand, 0)}</strong></td></tr>
+    </table>
+
+    ${q.notes ? `<div class="rep-subhead">${L('quotationNotesCard')}</div><p class="quote-notes">${escapeHtml(q.notes).replace(/\n/g,'<br>')}</p>` : ''}
+
+    <div class="quote-sign">
+      <div class="sign-box"><div class="sign-line">${L('quotationSignCustomer')}</div></div>
+      <div class="sign-box"><div class="sign-line">${L('quotationSignAuthorized')}</div></div>
+    </div>
+
+    ${reportFooter()}
+  `;
+  renderPrintReport(html);
 }
 
 // ============ Init ============

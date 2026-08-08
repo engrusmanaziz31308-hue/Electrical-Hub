@@ -15,6 +15,7 @@ const I18N = {
   navWire: { en: "Wire & Breaker Chart", ur: "وائر اور بریکر چارٹ" },
   navConverter: { en: "Unit Converter", ur: "یونٹ کنورٹر" },
   navGlossary: { en: "Glossary", ur: "اصطلاحات" },
+  navQuotation: { en: "Quotation", ur: "کوٹیشن" },
 
   // home
   homeHeroTitle: { en: "Everything you need to plan, calculate and understand electrical & solar systems.", ur: "الیکٹریکل اور سولر سسٹم کو سمجھنے، ڈیزائن کرنے اور حساب لگانے کے لیے ایک ہی جگہ۔" },
@@ -31,6 +32,8 @@ const I18N = {
   toolGlossaryDesc: { en: "Common electrical & solar terms explained in plain English and Urdu.", ur: "عام الیکٹریکل اور سولر اصطلاحات آسان اردو اور انگلش میں۔" },
   toolConverterTitle: { en: "Unit Converter", ur: "یونٹ کنورٹر" },
   toolConverterDesc: { en: "Convert length, power, energy and wire-size units instantly.", ur: "لمبائی، پاور، توانائی اور وائر سائز کی اکائیاں فوری طور پر تبدیل کریں۔" },
+  toolQuotationTitle: { en: "Quotation Maker", ur: "کوٹیشن میکر" },
+  toolQuotationDesc: { en: "Create a customer quotation with items & pricing, and download or print it as a PDF.", ur: "کسٹمر کے لیے آئٹمز اور قیمتوں کے ساتھ کوٹیشن بنائیں، اور اسے پی ڈی ایف کے طور پر ڈاؤن لوڈ یا پرنٹ کریں۔" },
   goOpen: { en: "Open →", ur: "کھولیں ←" },
 
   // load calculator page
@@ -87,6 +90,7 @@ const I18N = {
   solarSummaryCard: { en: "Summary", ur: "خلاصہ" },
   solarNote: { en: "These are simplified sizing estimates for planning purposes. Shading, temperature losses, wire runs and local weather change real-world results — get a site survey before purchase.", ur: "یہ صرف منصوبہ بندی کے لیے سادہ اندازے ہیں۔ سایہ، حرارت کا نقصان، تاروں کا فاصلہ اور موسم حقیقی نتائج بدل سکتے ہیں — خریداری سے پہلے سائٹ سروے ضرور کروائیں۔" },
   solarDcCard: { en: "5 · DC Wiring & Breakers (auto-sized)", ur: "٥ · ڈی سی وائرنگ اور بریکرز (خودکار سائز)" },
+  dcTag: { en: "DC", ur: "DC" },
   solarDcBattInv: { en: "Battery ↔ Inverter cable", ur: "بیٹری ↔ انورٹر کیبل" },
   solarDcBattInvBreaker: { en: "Battery ↔ Inverter DC breaker / fuse", ur: "بیٹری ↔ انورٹر ڈی سی بریکر / فیوز" },
   solarDcPvCc: { en: "Solar array ↔ Charge controller cable", ur: "سولر پینل ↔ چارج کنٹرولر کیبل" },
@@ -188,6 +192,38 @@ const I18N = {
   searchPlaceholder: { en: "Search a term...", ur: "اصطلاح تلاش کریں..." },
   noResults: { en: "No terms match your search.", ur: "آپ کی تلاش سے کوئی اصطلاح میل نہیں کھاتی۔" },
   glossaryFormula: { en: "Formula", ur: "فارمولا" },
+
+  // quotation page
+  quotationPageTitle: { en: "Quotation Maker", ur: "کوٹیشن میکر" },
+  quotationPageDesc: { en: "Fill in the customer details and items, then download or print a ready-to-share PDF quotation.", ur: "کسٹمر کی تفصیلات اور آئٹمز درج کریں، پھر شیئر کرنے کے لیے تیار پی ڈی ایف کوٹیشن ڈاؤن لوڈ یا پرنٹ کریں۔" },
+  quotationMetaCard: { en: "Quotation Details", ur: "کوٹیشن کی تفصیلات" },
+  quotationNumber: { en: "Quotation No.", ur: "کوٹیشن نمبر" },
+  quotationDate: { en: "Date", ur: "تاریخ" },
+  quotationValidity: { en: "Valid for", ur: "قابل قبول مدت" },
+  quotationValidityPh: { en: "e.g. 7 days", ur: "مثلاً 7 دن" },
+  quotationCustomerCard: { en: "Customer Details", ur: "کسٹمر کی تفصیلات" },
+  custName: { en: "Customer Name", ur: "کسٹمر کا نام" },
+  custCompany: { en: "Customer Company Name", ur: "کسٹمر کمپنی کا نام" },
+  custPhone: { en: "Customer Phone Number", ur: "کسٹمر کا فون نمبر" },
+  custAddress: { en: "Customer Address", ur: "کسٹمر کا ایڈریس" },
+  quotationItemsCard: { en: "Items", ur: "آئٹمز" },
+  colSr: { en: "S.No", ur: "سیریل نمبر" },
+  colItemName: { en: "Item Name", ur: "آئٹم کا نام" },
+  colSpecification: { en: "Specification", ur: "سپیسیفیکیشن" },
+  colUnitPrice: { en: "Unit Price", ur: "یونٹ پرائس" },
+  colAmount: { en: "Total Amount", ur: "ٹوٹل اماؤنٹ" },
+  quotationAddItem: { en: "+ Add Item", ur: "+ آئٹم شامل کریں" },
+  quotationSubtotal: { en: "Subtotal", ur: "سب ٹوٹل" },
+  quotationDiscount: { en: "Discount", ur: "ڈسکاؤنٹ" },
+  quotationGrandTotal: { en: "Grand Total", ur: "کل رقم" },
+  quotationNotesCard: { en: "Notes / Terms", ur: "نوٹس / شرائط" },
+  quotationNotesPh: { en: "e.g. Prices are exclusive of installation charges. Advance payment required to confirm order.", ur: "مثلاً قیمتوں میں انسٹالیشن چارجز شامل نہیں۔ آرڈر کنفرم کرنے کے لیے ایڈوانس ادائیگی درکار ہے۔" },
+  quotationDownloadPdf: { en: "Download / Print Quotation (PDF)", ur: "کوٹیشن ڈاؤن لوڈ / پرنٹ کریں (پی ڈی ایف)" },
+  quotationClear: { en: "Clear Form", ur: "فارم صاف کریں" },
+  quotationClearConfirm: { en: "Clear the whole quotation form? This cannot be undone.", ur: "کیا پوری کوٹیشن فارم صاف کر دی جائے؟ یہ واپس نہیں ہو سکتا۔" },
+  quotationPrintTitle: { en: "QUOTATION", ur: "کوٹیشن" },
+  quotationSignCustomer: { en: "Customer Signature", ur: "کسٹمر دستخط" },
+  quotationSignAuthorized: { en: "Authorized Signature & Stamp", ur: "مجاز دستخط اور مہر" },
 };
 
 function tr(key, lang){

@@ -175,7 +175,13 @@
     color: var(--text) !important; padding:10px 12px; border-radius:7px; font-size:14px;
     font-family: var(--font-mono); color-scheme: light only;
   }
-  input:focus, select:focus, button:focus-visible{
+  textarea{
+    width:100%; background: var(--bg-alt) !important; border:1px solid var(--line);
+    color: var(--text) !important; padding:10px 12px; border-radius:7px; font-size:13.5px;
+    font-family: inherit; color-scheme: light only; resize:vertical;
+  }
+  html[dir="rtl"] textarea{ font-family: var(--font-urdu); font-size:16px; }
+  input:focus, select:focus, textarea:focus, button:focus-visible{
     outline:2px solid var(--amber); outline-offset:1px; border-color: var(--amber);
   }
   .field-row{ display:flex; gap:10px; }
@@ -362,6 +368,19 @@
     .rep-table th{ background:#f0f0f0; font-size:10.5px; text-transform:uppercase; }
     .rep-summary td:first-child{ font-weight:600; width:55%; }
     .rep-footer{ margin-top:18px; font-size:10.5px; color:#666; border-top:1px solid #ccc; padding-top:10px; }
+
+    /* Quotation-specific print layout */
+    .quote-header{ display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px; }
+    .quote-brand{ display:flex; align-items:center; gap:10px; }
+    .quote-brand img{ width:46px; height:46px; border-radius:8px; object-fit:cover; }
+    .quote-tag{ font-size:9.5px; color:#777; margin-top:2px; }
+    .quote-titleblock{ text-align:right; }
+    #printArea.lang-ur .quote-titleblock{ text-align:left; }
+    .quote-titleblock h1{ font-size:18px; margin-bottom:4px; font-weight:700; letter-spacing:1px; }
+    .quote-notes{ font-size:11px; color:#333; white-space:pre-wrap; margin-bottom:14px; line-height:1.6; }
+    .quote-sign{ display:flex; justify-content:space-between; margin-top:50px; }
+    .sign-box{ width:44%; }
+    .sign-line{ border-top:1px solid #333; margin-top:36px; padding-top:6px; font-size:10.5px; color:#444; text-align:center; }
   }
 </style>
 </head>
