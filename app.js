@@ -138,13 +138,13 @@ function renderLoad(el){
             <input type="text" id="newLoadName" placeholder="${L('loadCustomNamePh')}">
           </div>
           <div class="field" style="flex:1;">
-            <div class="unit-suffix"><input type="text" inputmode="decimal" id="newLoadWatt" min="0" value="100"><span>W</span></div>
+            <div class="unit-suffix"><input type="text" id="newLoadWatt" min="0" value="100"><span>W</span></div>
           </div>
           <div class="field" style="flex:0 0 80px;">
-            <input type="text" inputmode="decimal" id="newLoadQty" min="0" value="1" title="${L('colQty')}">
+            <input type="text" id="newLoadQty" min="0" value="1" title="${L('colQty')}">
           </div>
           <div class="field" style="flex:0 0 80px;">
-            <input type="text" inputmode="decimal" id="newLoadHrs" min="0" step="0.5" value="1" title="${L('colHours')}">
+            <input type="text" id="newLoadHrs" min="0" step="0.5" value="1" title="${L('colHours')}">
           </div>
           <div class="field" style="flex:0 0 auto;">
             <button class="btn" onclick="addCustomLoad()">${L('loadCustomAdd')}</button>
@@ -177,9 +177,9 @@ function renderLoad(el){
     tr.innerHTML = `
       <td><input type="checkbox" ${s.checked?'checked':''} onchange="onLoadChange('${a.key}','checked',this.checked)"></td>
       <td>${STATE.lang==='ur' ? a.ur : a.en}</td>
-      <td><input class="qty-input" style="width:74px;" type="text" inputmode="decimal" min="0" value="${s.watt}" onchange="onLoadChange('${a.key}','watt',this.value)"></td>
-      <td><input class="qty-input" type="text" inputmode="decimal" min="0" value="${s.qty}" onchange="onLoadChange('${a.key}','qty',this.value)"></td>
-      <td><input class="qty-input" type="text" inputmode="decimal" min="0" step="0.5" value="${s.hrs}" onchange="onLoadChange('${a.key}','hrs',this.value)"></td>
+      <td><input class="qty-input" style="width:74px;" type="text" min="0" value="${s.watt}" onchange="onLoadChange('${a.key}','watt',this.value)"></td>
+      <td><input class="qty-input" type="text" min="0" value="${s.qty}" onchange="onLoadChange('${a.key}','qty',this.value)"></td>
+      <td><input class="qty-input" type="text" min="0" step="0.5" value="${s.hrs}" onchange="onLoadChange('${a.key}','hrs',this.value)"></td>
       <td class="mono" id="wh_${a.key}">0</td>
       <td></td>
     `;
@@ -197,9 +197,9 @@ function renderCustomLoadRows(){
     tr.innerHTML = `
       <td><input type="checkbox" ${c.checked?'checked':''} onchange="onCustomLoadChange('${c.id}','checked',this.checked)"></td>
       <td><input type="text" style="width:100%;" value="${c.name}" onchange="onCustomLoadChange('${c.id}','name',this.value)"></td>
-      <td><input class="qty-input" style="width:74px;" type="text" inputmode="decimal" min="0" value="${c.watt}" onchange="onCustomLoadChange('${c.id}','watt',this.value)"></td>
-      <td><input class="qty-input" type="text" inputmode="decimal" min="0" value="${c.qty}" onchange="onCustomLoadChange('${c.id}','qty',this.value)"></td>
-      <td><input class="qty-input" type="text" inputmode="decimal" min="0" step="0.5" value="${c.hrs}" onchange="onCustomLoadChange('${c.id}','hrs',this.value)"></td>
+      <td><input class="qty-input" style="width:74px;" type="text" min="0" value="${c.watt}" onchange="onCustomLoadChange('${c.id}','watt',this.value)"></td>
+      <td><input class="qty-input" type="text" min="0" value="${c.qty}" onchange="onCustomLoadChange('${c.id}','qty',this.value)"></td>
+      <td><input class="qty-input" type="text" min="0" step="0.5" value="${c.hrs}" onchange="onCustomLoadChange('${c.id}','hrs',this.value)"></td>
       <td class="mono" id="wh_c_${c.id}">0</td>
       <td><button class="btn-ghost" style="padding:5px 10px; font-size:11.5px;" onclick="removeCustomLoad('${c.id}')">${L('loadCustomRemove')}</button></td>
     `;
@@ -286,15 +286,15 @@ function renderSolar(el){
         <h3>${L('solarLoadCard')}</h3>
         <div class="field">
           <label>${L('solarDailyEnergy')}</label>
-          <div class="unit-suffix"><input type="text" inputmode="decimal" id="s_dailyEnergy" value="${s.dailyEnergy}" oninput="recalcSolar()"><span>Wh</span></div>
+          <div class="unit-suffix"><input type="text" id="s_dailyEnergy" value="${s.dailyEnergy}" oninput="recalcSolar()"><span>Wh</span></div>
         </div>
         <div class="field">
           <label>${L('solarSafety')}</label>
-          <div class="unit-suffix"><input type="text" inputmode="decimal" id="s_safety" value="20" oninput="recalcSolar()"><span>%</span></div>
+          <div class="unit-suffix"><input type="text" id="s_safety" value="20" oninput="recalcSolar()"><span>%</span></div>
         </div>
         <div class="field" style="margin-bottom:0;">
           <label>${STATE.lang==='ur' ? 'مجموعی متصل لوڈ (پیک)' : 'Total connected / peak load'}</label>
-          <div class="unit-suffix"><input type="text" inputmode="decimal" id="s_peakLoad" value="${s.peakLoad}" oninput="recalcSolar()"><span>W</span></div>
+          <div class="unit-suffix"><input type="text" id="s_peakLoad" value="${s.peakLoad}" oninput="recalcSolar()"><span>W</span></div>
         </div>
       </div>
 
@@ -303,16 +303,16 @@ function renderSolar(el){
         <div class="field-row">
           <div class="field">
             <label>${L('solarSunHours')}</label>
-            <div class="unit-suffix"><input type="text" inputmode="decimal" id="s_sunHours" value="5" step="0.1" oninput="recalcSolar()"><span>h</span></div>
+            <div class="unit-suffix"><input type="text" id="s_sunHours" value="5" step="0.1" oninput="recalcSolar()"><span>h</span></div>
           </div>
           <div class="field">
             <label>${L('solarSysEff')}</label>
-            <div class="unit-suffix"><input type="text" inputmode="decimal" id="s_sysEff" value="80" oninput="recalcSolar()"><span>%</span></div>
+            <div class="unit-suffix"><input type="text" id="s_sysEff" value="80" oninput="recalcSolar()"><span>%</span></div>
           </div>
         </div>
         <div class="field" style="margin-bottom:0;">
           <label>${L('solarPanelWp')}</label>
-          <div class="unit-suffix"><input type="text" inputmode="decimal" id="s_panelWp" value="330" oninput="recalcSolar()"><span>Wp</span></div>
+          <div class="unit-suffix"><input type="text" id="s_panelWp" value="330" oninput="recalcSolar()"><span>Wp</span></div>
         </div>
         <div class="result-box" style="margin-top:14px;">
           <div class="result-row"><span class="result-label">${L('solarReqArrayWp')}</span><span class="result-value" id="r_arrayWp">-</span></div>
@@ -325,7 +325,7 @@ function renderSolar(el){
         <div class="field-row">
           <div class="field">
             <label>${L('solarAutonomy')}</label>
-            <div class="unit-suffix"><input type="text" inputmode="decimal" id="s_autonomy" value="1" step="0.5" oninput="recalcSolar()"><span>d</span></div>
+            <div class="unit-suffix"><input type="text" id="s_autonomy" value="1" step="0.5" oninput="recalcSolar()"><span>d</span></div>
           </div>
           <div class="field">
             <label>${L('solarBattVoltage')}</label>
@@ -339,16 +339,16 @@ function renderSolar(el){
         <div class="field-row">
           <div class="field">
             <label>${L('solarDOD')}</label>
-            <div class="unit-suffix"><input type="text" inputmode="decimal" id="s_dod" value="50" oninput="recalcSolar()"><span>%</span></div>
+            <div class="unit-suffix"><input type="text" id="s_dod" value="50" oninput="recalcSolar()"><span>%</span></div>
           </div>
           <div class="field">
             <label>${L('solarBattEff')}</label>
-            <div class="unit-suffix"><input type="text" inputmode="decimal" id="s_battEff" value="85" oninput="recalcSolar()"><span>%</span></div>
+            <div class="unit-suffix"><input type="text" id="s_battEff" value="85" oninput="recalcSolar()"><span>%</span></div>
           </div>
         </div>
         <div class="field" style="margin-bottom:0;">
           <label>${L('solarBattUnit')}</label>
-          <div class="unit-suffix"><input type="text" inputmode="decimal" id="s_battUnit" value="100" oninput="recalcSolar()"><span>Ah</span></div>
+          <div class="unit-suffix"><input type="text" id="s_battUnit" value="100" oninput="recalcSolar()"><span>Ah</span></div>
         </div>
         <div class="result-box" style="margin-top:14px;">
           <div class="result-row"><span class="result-label">${L('solarReqAh')}</span><span class="result-value" id="r_reqAh">-</span></div>
@@ -361,11 +361,11 @@ function renderSolar(el){
         <div class="field-row">
           <div class="field">
             <label>${L('solarSurge')}</label>
-            <div class="unit-suffix"><input type="text" inputmode="decimal" id="s_surge" value="1.25" step="0.05" oninput="recalcSolar()"><span>×</span></div>
+            <div class="unit-suffix"><input type="text" id="s_surge" value="1.25" step="0.05" oninput="recalcSolar()"><span>×</span></div>
           </div>
           <div class="field">
             <label>${L('solarPF')}</label>
-            <div class="unit-suffix"><input type="text" inputmode="decimal" id="s_pf" value="0.8" step="0.05" oninput="recalcSolar()"><span></span></div>
+            <div class="unit-suffix"><input type="text" id="s_pf" value="0.8" step="0.05" oninput="recalcSolar()"><span></span></div>
           </div>
         </div>
         <div class="result-box" style="margin-top:8px;">
@@ -511,9 +511,9 @@ function renderOhm(el){
     <div class="card" style="max-width:520px;">
       <h3>${L('ohmTitle')}</h3>
       <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:16px;">${L('ohmDesc')}</p>
-      <div class="field"><label>${L('voltage')}</label><input type="text" inputmode="decimal" id="ohmV" oninput="recalcOhm('V')"></div>
-      <div class="field"><label>${L('current')}</label><input type="text" inputmode="decimal" id="ohmI" oninput="recalcOhm('I')"></div>
-      <div class="field"><label>${L('resistance')}</label><input type="text" inputmode="decimal" id="ohmR" oninput="recalcOhm('R')"></div>
+      <div class="field"><label>${L('voltage')}</label><input type="text" id="ohmV" oninput="recalcOhm('V')"></div>
+      <div class="field"><label>${L('current')}</label><input type="text" id="ohmI" oninput="recalcOhm('I')"></div>
+      <div class="field"><label>${L('resistance')}</label><input type="text" id="ohmR" oninput="recalcOhm('R')"></div>
       <div class="result-box">
         <div class="result-row"><span class="result-label">${L('power')}</span><span class="result-value big" id="ohmP">-</span></div>
       </div>
@@ -561,10 +561,10 @@ function renderPowerCalc(el){
         </select>
       </div>
       <div class="field-row">
-        <div class="field"><label>${L('voltage')}</label><input type="text" inputmode="decimal" id="pw_v" value="230" oninput="recalcPower()"></div>
-        <div class="field"><label>${L('current')}</label><input type="text" inputmode="decimal" id="pw_i" value="5" oninput="recalcPower()"></div>
+        <div class="field"><label>${L('voltage')}</label><input type="text" id="pw_v" value="230" oninput="recalcPower()"></div>
+        <div class="field"><label>${L('current')}</label><input type="text" id="pw_i" value="5" oninput="recalcPower()"></div>
       </div>
-      <div class="field"><label>${L('powerFactor')}</label><input type="text" inputmode="decimal" id="pw_pf" value="0.9" step="0.05" oninput="recalcPower()"></div>
+      <div class="field"><label>${L('powerFactor')}</label><input type="text" id="pw_pf" value="0.9" step="0.05" oninput="recalcPower()"></div>
       <div class="result-box">
         <div class="result-row"><span class="result-label">${L('realPower')}</span><span class="result-value big" id="pw_real">-</span></div>
         <div class="result-row"><span class="result-label">${L('apparentPower')}</span><span class="result-value" id="pw_apparent">-</span></div>
@@ -591,12 +591,12 @@ function renderEnergyCalc(el){
       <h3>${L('energyTitle')}</h3>
       <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:16px;">${L('energyDesc')}</p>
       <div class="field-row">
-        <div class="field"><label>${L('loadWatt')}</label><input type="text" inputmode="decimal" id="en_w" value="1000" oninput="recalcEnergy()"></div>
-        <div class="field"><label>${L('hoursPerDay')}</label><input type="text" inputmode="decimal" id="en_h" value="5" oninput="recalcEnergy()"></div>
+        <div class="field"><label>${L('loadWatt')}</label><input type="text" id="en_w" value="1000" oninput="recalcEnergy()"></div>
+        <div class="field"><label>${L('hoursPerDay')}</label><input type="text" id="en_h" value="5" oninput="recalcEnergy()"></div>
       </div>
       <div class="field-row">
-        <div class="field"><label>${L('daysPerMonth')}</label><input type="text" inputmode="decimal" id="en_d" value="30" oninput="recalcEnergy()"></div>
-        <div class="field"><label>${L('ratePerUnit')}</label><input type="text" inputmode="decimal" id="en_r" value="45" oninput="recalcEnergy()"></div>
+        <div class="field"><label>${L('daysPerMonth')}</label><input type="text" id="en_d" value="30" oninput="recalcEnergy()"></div>
+        <div class="field"><label>${L('ratePerUnit')}</label><input type="text" id="en_r" value="45" oninput="recalcEnergy()"></div>
       </div>
       <div class="result-box">
         <div class="result-row"><span class="result-label">${L('unitsDay')}</span><span class="result-value" id="en_ud">-</span></div>
@@ -626,10 +626,10 @@ function renderP3Calc(el){
       <h3>${L('p3Title')}</h3>
       <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:16px;">${L('p3Desc')}</p>
       <div class="field-row">
-        <div class="field"><label>${L('lineVoltage')}</label><input type="text" inputmode="decimal" id="p3_v" value="400" oninput="recalcP3()"></div>
-        <div class="field"><label>${L('lineCurrent')}</label><input type="text" inputmode="decimal" id="p3_i" value="10" oninput="recalcP3()"></div>
+        <div class="field"><label>${L('lineVoltage')}</label><input type="text" id="p3_v" value="400" oninput="recalcP3()"></div>
+        <div class="field"><label>${L('lineCurrent')}</label><input type="text" id="p3_i" value="10" oninput="recalcP3()"></div>
       </div>
-      <div class="field"><label>${L('powerFactor')}</label><input type="text" inputmode="decimal" id="p3_pf" value="0.9" step="0.05" oninput="recalcP3()"></div>
+      <div class="field"><label>${L('powerFactor')}</label><input type="text" id="p3_pf" value="0.9" step="0.05" oninput="recalcP3()"></div>
       <div class="result-box">
         <div class="result-row"><span class="result-label">${L('realPower')}</span><span class="result-value big" id="p3_real">-</span></div>
         <div class="result-row"><span class="result-label">${L('apparentPower')}</span><span class="result-value" id="p3_apparent">-</span></div>
@@ -654,11 +654,11 @@ function renderVdropCalc(el){
       <h3>${L('vdTitle')}</h3>
       <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:16px;">${L('vdDesc')}</p>
       <div class="field-row">
-        <div class="field"><label>${L('current')}</label><input type="text" inputmode="decimal" id="vd_i" value="10" oninput="recalcVdrop()"></div>
-        <div class="field"><label>${L('cableLength')}</label><input type="text" inputmode="decimal" id="vd_len" value="20" oninput="recalcVdrop()"></div>
+        <div class="field"><label>${L('current')}</label><input type="text" id="vd_i" value="10" oninput="recalcVdrop()"></div>
+        <div class="field"><label>${L('cableLength')}</label><input type="text" id="vd_len" value="20" oninput="recalcVdrop()"></div>
       </div>
-      <div class="field"><label>${L('cableSize')}</label><input type="text" inputmode="decimal" id="vd_size" value="2.5" step="0.5" oninput="recalcVdrop()"></div>
-      <div class="field"><label>${L('voltage')}</label><input type="text" inputmode="decimal" id="vd_v" value="230" oninput="recalcVdrop()"></div>
+      <div class="field"><label>${L('cableSize')}</label><input type="text" id="vd_size" value="2.5" step="0.5" oninput="recalcVdrop()"></div>
+      <div class="field"><label>${L('voltage')}</label><input type="text" id="vd_v" value="230" oninput="recalcVdrop()"></div>
       <div class="result-box">
         <div class="result-row"><span class="result-label">${L('vdResult')}</span><span class="result-value big" id="vd_drop">-</span></div>
         <div class="result-row"><span class="result-label">${L('vdPercent')}</span><span class="result-value" id="vd_pct">-</span></div>
@@ -830,7 +830,7 @@ function renderUnitConv(units, baseKey){
       <div class="card" style="max-width:520px;">
         <div class="field">
           <label>${L('convValue')}</label>
-          <input type="text" inputmode="decimal" id="conv_value" value="1" oninput="recalcUnitConv()">
+          <input type="text" id="conv_value" value="1" oninput="recalcUnitConv()">
         </div>
         <div class="field-row">
           <div class="field">
