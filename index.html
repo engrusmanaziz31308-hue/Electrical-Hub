@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <title>Electrical Hub — برقی حساب</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#FFFFFF">
+<meta name="theme-color" content="#EA580C">
 <meta name="color-scheme" content="light only">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,19 +14,22 @@
   :root{
     color-scheme: light only;
     --bg: #FFFFFF;
-    --bg-alt: #F5F7FA;
+    --bg-alt: #F6F4FF;
     --surface: #FFFFFF;
-    --surface-2: #EEF1F5;
-    --line: #E1E6EC;
-    --line-soft: #ECEFF3;
-    --text: #172230;
-    --text-muted: #57687A;
-    --text-faint: #8A97A5;
-    --amber: #9C6508;
-    --amber-dim: #E9CB98;
-    --green: #0E9A66;
-    --red: #D64545;
-    --blue: #1E6FBF;
+    --surface-2: #EFF1FA;
+    --line: #E3E1F5;
+    --line-soft: #ECEAF9;
+    --text: #1A1730;
+    --text-muted: #5B5876;
+    --text-faint: #8D8AA8;
+    --amber: #F59E0B;
+    --amber-deep: #EA580C;
+    --amber-dim: #FBD8A6;
+    --green: #16A34A;
+    --red: #E11D48;
+    --blue: #4F46E5;
+    --teal: #0D9488;
+    --brand-gradient: linear-gradient(135deg, #F59E0B 0%, #EA580C 55%, #E11D8C 120%);
     --radius: 10px;
     --font-display: 'Space Grotesk', sans-serif;
     --font-body: 'Inter', sans-serif;
@@ -39,9 +42,9 @@
   body{
     background:
       linear-gradient(var(--bg) 0%, var(--bg) 100%),
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='340' height='340' viewBox='0 0 340 340'><g fill='none' stroke='%231E6FBF' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' opacity='0.055'><circle cx='58' cy='62' r='23'/><path d='M48 82 h20 M50 90 h16 M52 98 h12'/><path d='M46 60 q12 16 24 0 M58 39 v21'/><rect x='240' y='34' width='36' height='26' rx='4'/><path d='M250 60 v16 M266 60 v16 M235 46 h5 M281 46 h5'/><path d='M176 132 l-17 36 h15 l-19 38 l36-42 h-15 z'/><path d='M24 246 h16 l7 -11 l9 22 l9 -22 l9 22 l9 -22 l7 11 h16'/><circle cx='246' cy='250' r='4.5'/><circle cx='278' cy='223' r='4.5'/><circle cx='305' cy='262' r='4.5'/><path d='M246 250 h32 M250 246 l24 -19 M282 227 l19 31'/><rect x='128' y='258' width='30' height='42' rx='5'/><circle cx='138' cy='273' r='2.2'/><circle cx='150' cy='273' r='2.2'/><path d='M138 279 v10 M150 279 v10'/></g></svg>"),
-      repeating-linear-gradient(0deg, rgba(30,111,191,0.028) 0px, rgba(30,111,191,0.028) 1px, transparent 1px, transparent 32px),
-      repeating-linear-gradient(90deg, rgba(30,111,191,0.028) 0px, rgba(30,111,191,0.028) 1px, transparent 1px, transparent 32px);
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='340' height='340' viewBox='0 0 340 340'><g fill='none' stroke='%234F46E5' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' opacity='0.055'><circle cx='58' cy='62' r='23'/><path d='M48 82 h20 M50 90 h16 M52 98 h12'/><path d='M46 60 q12 16 24 0 M58 39 v21'/><rect x='240' y='34' width='36' height='26' rx='4'/><path d='M250 60 v16 M266 60 v16 M235 46 h5 M281 46 h5'/><path d='M176 132 l-17 36 h15 l-19 38 l36-42 h-15 z'/><path d='M24 246 h16 l7 -11 l9 22 l9 -22 l9 22 l9 -22 l7 11 h16'/><circle cx='246' cy='250' r='4.5'/><circle cx='278' cy='223' r='4.5'/><circle cx='305' cy='262' r='4.5'/><path d='M246 250 h32 M250 246 l24 -19 M282 227 l19 31'/><rect x='128' y='258' width='30' height='42' rx='5'/><circle cx='138' cy='273' r='2.2'/><circle cx='150' cy='273' r='2.2'/><path d='M138 279 v10 M150 279 v10'/></g></svg>"),
+      repeating-linear-gradient(0deg, rgba(79,70,229,0.035) 0px, rgba(79,70,229,0.035) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, rgba(79,70,229,0.035) 0px, rgba(79,70,229,0.035) 1px, transparent 1px, transparent 32px);
     background-repeat: no-repeat, repeat, repeat, repeat;
     background-color: var(--bg);
     color: var(--text);
@@ -67,10 +70,10 @@
     border-bottom:1px solid var(--line);
   }
   .topbar-trace{
-    height:2px; width:100%;
-    background: linear-gradient(90deg, transparent, var(--amber) 20%, var(--amber) 80%, transparent);
+    height:3px; width:100%;
+    background: linear-gradient(90deg, transparent, var(--blue) 15%, var(--amber) 45%, var(--red) 65%, var(--blue) 90%, transparent);
     background-size: 200% 100%;
-    animation: trace 5s linear infinite;
+    animation: trace 6s linear infinite;
   }
   @keyframes trace{
     0%{ background-position: 200% 0; }
@@ -83,13 +86,14 @@
   }
   .brand{ display:flex; align-items:center; gap:10px; }
   .brand-mark{
-    width:34px; height:34px; border-radius:8px;
-    background: var(--surface-2);
-    border:1px solid var(--line);
+    width:36px; height:36px; border-radius:10px;
+    background: var(--brand-gradient);
+    border:none; overflow:hidden;
     display:flex; align-items:center; justify-content:center;
-    color: var(--amber);
-    font-family: var(--font-mono); font-weight:700; font-size:15px;
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(234,88,12,0.35);
   }
+  .brand-mark img{ width:100%; height:100%; object-fit:cover; display:block; }
   .brand-name{
     font-family: var(--font-display); font-weight:700; font-size:17px; letter-spacing:0.2px;
   }
@@ -106,7 +110,7 @@
     padding:7px 13px; font-size:13px; font-weight:600;
     font-family: var(--font-body);
   }
-  .lang-toggle button.active{ background: var(--amber); color:#151515; }
+  .lang-toggle button.active{ background: var(--brand-gradient); color:#fff; }
 
   nav.mainnav{
     max-width:1180px; margin:0 auto;
@@ -123,8 +127,8 @@
     font-family: var(--font-body);
   }
   html[dir="rtl"] nav.mainnav button{ font-family: var(--font-urdu); font-size:16px; padding-top:9px;}
-  nav.mainnav button.active{ color: var(--amber); border-bottom-color: var(--amber); }
-  nav.mainnav button:hover{ color: var(--text); }
+  nav.mainnav button.active{ color: var(--amber-deep); border-bottom-color: var(--amber-deep); border-bottom-width:3px; }
+  nav.mainnav button:hover{ color: var(--blue); }
 
   /* ---------- Layout ---------- */
   main{ max-width:1180px; margin:0 auto; padding:28px 20px 60px; }
@@ -153,7 +157,13 @@
     border:1px solid var(--line);
     border-radius: var(--radius);
     padding:20px;
-    box-shadow: 0 1px 3px rgba(23,34,48,0.05), 0 1px 2px rgba(23,34,48,0.04);
+    position:relative;
+    box-shadow: 0 1px 3px rgba(26,23,48,0.06), 0 1px 2px rgba(26,23,48,0.05);
+  }
+  .card::before{
+    content:''; position:absolute; top:0; left:0; right:0; height:3px;
+    background: var(--brand-gradient);
+    border-radius: var(--radius) var(--radius) 0 0;
   }
   .card h3{
     font-family: var(--font-display); font-size:15px; font-weight:700;
@@ -163,7 +173,7 @@
   html[dir="rtl"] .card h3{ font-family: var(--font-urdu); font-size:18px; font-weight:600; }
   .card h3 .tag{
     font-family: var(--font-mono); font-size:10px; color:var(--amber);
-    background: rgba(156,101,8,0.08); border:1px solid var(--amber-dim);
+    background: rgba(245,158,11,0.12); border:1px solid var(--amber-dim);
     padding:2px 6px; border-radius:4px;
   }
 
@@ -195,16 +205,17 @@
   html[dir="rtl"] .unit-suffix input{ text-align:right; padding-left:44px; }
 
   .btn{
-    background: var(--amber); color:#151515; border:none; font-weight:700;
+    background: var(--brand-gradient); color:#1A1000; border:none; font-weight:700;
     padding:11px 18px; border-radius:7px; font-size:13.5px;
     display:inline-flex; align-items:center; gap:8px;
+    box-shadow: 0 3px 10px rgba(234,88,12,0.28);
   }
-  .btn:hover{ filter:brightness(1.08); }
+  .btn:hover{ filter:brightness(1.06); box-shadow: 0 4px 14px rgba(234,88,12,0.38); }
   .btn-ghost{
-    background:none; border:1px solid var(--line); color:var(--text-muted); font-weight:600;
+    background:none; border:1.5px solid var(--line); color:var(--text-muted); font-weight:600;
     padding:10px 16px; border-radius:7px; font-size:13px;
   }
-  .btn-ghost:hover{ color:var(--text); border-color: var(--text-faint); }
+  .btn-ghost:hover{ color:var(--blue); border-color: var(--blue); }
 
   .result-box{
     background: var(--bg-alt); border:1px solid var(--line); border-radius:8px;
@@ -235,7 +246,7 @@
   th{ color:var(--text-muted); font-size:11.5px; text-transform:uppercase; letter-spacing:0.5px; font-family:var(--font-mono); font-weight:600; }
   html[dir="rtl"] th{ font-family: var(--font-urdu); font-size:13px; text-transform:none; letter-spacing:0; }
   td.mono, td input{ font-family: var(--font-mono); }
-  tr:hover td{ background: rgba(30,111,191,0.035); }
+  tr:hover td{ background: rgba(79,70,229,0.045); }
   .qty-input{ width:68px; min-width:68px; padding:6px 8px; font-size:13.5px; text-align:center; }
 
   .home-hero{
@@ -246,8 +257,8 @@
   .home-hero::after{
     content:''; position:absolute; inset:0;
     background-image:
-      radial-gradient(circle at 85% 20%, rgba(156,101,8,0.10), transparent 45%),
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'><g fill='none' stroke='%239C6508' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' opacity='0.10'><circle cx='170' cy='60' r='34'/><path d='M156 92 h28 M160 103 h20 M164 114 h12'/><path d='M150 60 q20 24 40 0 M170 26 v30'/><path d='M60 150 l-24 50 h20 l-26 52 l50-58 h-20 z'/><circle cx='60' cy='215' r='6'/><circle cx='105' cy='190' r='6'/><circle cx='140' cy='230' r='6'/><path d='M60 215 h45 M69 209 l31 -14 M111 194 l25 30'/></g></svg>");
+      radial-gradient(circle at 88% 12%, rgba(245,158,11,0.16), transparent 45%), radial-gradient(circle at 8% 92%, rgba(79,70,229,0.12), transparent 50%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'><g fill='none' stroke='%23EA580C' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' opacity='0.10'><circle cx='170' cy='60' r='34'/><path d='M156 92 h28 M160 103 h20 M164 114 h12'/><path d='M150 60 q20 24 40 0 M170 26 v30'/><path d='M60 150 l-24 50 h20 l-26 52 l50-58 h-20 z'/><circle cx='60' cy='215' r='6'/><circle cx='105' cy='190' r='6'/><circle cx='140' cy='230' r='6'/><path d='M60 215 h45 M69 209 l31 -14 M111 194 l25 30'/></g></svg>");
     background-position: right top, right bottom;
     background-repeat: no-repeat, no-repeat;
     background-size: auto, 220px;
@@ -264,10 +275,11 @@
     box-shadow: 0 1px 3px rgba(23,34,48,0.05);
   }
   html[dir="rtl"] .tool-card{ text-align:right; }
-  .tool-card:hover{ border-color: var(--amber-dim); transform:translateY(-2px); box-shadow: 0 6px 16px rgba(23,34,48,0.09); }
+  .tool-card:hover{ border-color: var(--amber); transform:translateY(-3px); box-shadow: 0 10px 22px rgba(79,70,229,0.13); }
   .tool-icon{
-    width:38px; height:38px; border-radius:8px; background:var(--bg-alt); border:1px solid var(--line);
-    display:flex; align-items:center; justify-content:center; color:var(--amber); font-family:var(--font-mono); font-weight:700;
+    width:40px; height:40px; border-radius:9px; background: var(--brand-gradient); border:none;
+    display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--font-mono); font-weight:700;
+    box-shadow: 0 3px 8px rgba(234,88,12,0.3);
   }
   .tool-card h4{ font-family: var(--font-display); font-size:15.5px; font-weight:700; }
   html[dir="rtl"] .tool-card h4{ font-family: var(--font-urdu); font-size:18px; font-weight:600;}
@@ -280,7 +292,7 @@
     padding:8px 14px; border-radius:20px; font-size:12.5px; font-weight:600;
   }
   html[dir="rtl"] .subtabs button{ font-family: var(--font-urdu); font-size:14.5px; }
-  .subtabs button.active{ background: var(--amber); color:#151515; border-color:var(--amber); }
+  .subtabs button.active{ background: var(--brand-gradient); color:#1A1000; border-color:transparent; }
   .subpage{ display:none; }
   .subpage.active{ display:block; }
 
@@ -304,7 +316,7 @@
 
   .chip{
     display:inline-block; font-family:var(--font-mono); font-size:10.5px;
-    background:rgba(30,111,191,0.10); color:var(--blue); border:1px solid rgba(30,111,191,0.28);
+    background:rgba(79,70,229,0.10); color:var(--blue); border:1px solid rgba(79,70,229,0.28);
     padding:2px 7px; border-radius:4px; margin-top:8px;
   }
 
@@ -340,7 +352,7 @@
 
   /* ---------- Touch-friendly tap targets (mobile app) ---------- */
   input[type="text"], input[type="checkbox"], select, button{
-    -webkit-tap-highlight-color: rgba(156,101,8,0.15);
+    -webkit-tap-highlight-color: rgba(245,158,11,0.18);
   }
   input[type="checkbox"]{
     width:19px; height:19px; accent-color: var(--amber); cursor:pointer;
@@ -360,8 +372,8 @@
     #printArea{ display:block !important; padding:10px; color:#111; background:#fff; }
     #printArea.lang-ur{ font-family: var(--font-urdu); direction:rtl; }
     #printArea.lang-en{ font-family: var(--font-body); direction:ltr; }
-    .rep-header{ margin-bottom:18px; border-bottom:2px solid #9C6508; padding-bottom:10px; }
-    .rep-brand{ font-weight:700; font-size:14px; color:#9C6508; margin-bottom:6px; }
+    .rep-header{ margin-bottom:18px; border-bottom:2px solid #C2410C; padding-bottom:10px; }
+    .rep-brand{ font-weight:700; font-size:14px; color:#C2410C; margin-bottom:6px; }
     .rep-header h1{ font-size:19px; margin-bottom:6px; font-weight:700; }
     .rep-meta{ font-size:11px; color:#555; }
     .rep-subhead{ margin-top:18px; margin-bottom:8px; font-size:14.5px; font-weight:700; }
@@ -393,7 +405,7 @@
   <div class="topbar-trace"></div>
   <div class="topbar-inner">
     <div class="brand">
-      <div class="brand-mark">⚡</div>
+      <div class="brand-mark"><img src="icon-512.png" alt="Electrical Hub logo"></div>
       <div class="brand-name" data-i18n="brandName">Electrical Hub<small data-i18n="brandTag">Design · Calculate · Learn</small></div>
     </div>
     <div class="lang-toggle">

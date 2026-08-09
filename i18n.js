@@ -77,6 +77,8 @@ const I18N = {
   solarPanelsNeeded: { en: "Panels needed", ur: "درکار پینلز کی تعداد" },
   solarBatteryCard: { en: "3 · Battery Bank", ur: "٣ · بیٹری بینک" },
   solarAutonomy: { en: "Backup days (autonomy)", ur: "بیک اپ کے دن" },
+  unitDays: { en: "Days", ur: "دن" },
+  unitHours: { en: "Hours", ur: "گھنٹے" },
   solarBattVoltage: { en: "Battery bank voltage", ur: "بیٹری بینک وولٹیج" },
   solarDOD: { en: "Depth of discharge (DOD)", ur: "ڈیپتھ آف ڈسچارج (DOD)" },
   solarBattEff: { en: "Battery / inverter efficiency", ur: "بیٹری/انورٹر کارکردگی" },

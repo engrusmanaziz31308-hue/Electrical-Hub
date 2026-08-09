@@ -4,7 +4,7 @@ const STATE = {
   page: 'home',
   load: {},          // per-appliance {checked, qty, hrs, watt}
   customLoads: [],   // user-added loads {id, name, watt, qty, hrs, checked}
-  solar: { dailyEnergy: 3000, peakLoad: 1000, sentFromLoad:false },
+  solar: { dailyEnergy: 3000, peakLoad: 1000, sentFromLoad:false, _autonomyUnitPrev:'days' },
   quotation: loadQuotationState(),
 };
 
@@ -329,7 +329,15 @@ function renderSolar(el){
         <div class="field-row">
           <div class="field">
             <label>${L('solarAutonomy')}</label>
-            <div class="unit-suffix"><input type="text" id="s_autonomy" value="1" step="0.5" oninput="recalcSolar()"><span>d</span></div>
+            <div style="display:flex; gap:8px;">
+              <div class="unit-suffix" style="flex:1;">
+                <input type="text" id="s_autonomy" value="1" step="0.5" oninput="recalcSolar()"><span id="s_autonomyUnitTag">d</span>
+              </div>
+              <select id="s_autonomyUnit" style="width:96px; flex-shrink:0;" onchange="onAutonomyUnitChange()">
+                <option value="days">${L('unitDays')}</option>
+                <option value="hours">${L('unitHours')}</option>
+              </select>
+            </div>
           </div>
           <div class="field">
             <label>${L('solarBattVoltage')}</label>
@@ -418,6 +426,25 @@ function pickBreakerForCurrent(currentA){
   return STD_BREAKER_SIZES[STD_BREAKER_SIZES.length - 1];
 }
 
+function onAutonomyUnitChange(){
+  const g = id => document.getElementById(id);
+  const input = g('s_autonomy');
+  const unitSel = g('s_autonomyUnit');
+  const tag = g('s_autonomyUnitTag');
+  if(!input || !unitSel) return;
+  const cur = parseFloat(input.value) || 0;
+  const newUnit = unitSel.value;
+  // convert the displayed number so the real-world duration stays the same
+  if(newUnit === 'hours' && STATE.solar._autonomyUnitPrev !== 'hours'){
+    input.value = String(Math.round(cur * 24 * 10) / 10);
+  } else if(newUnit === 'days' && STATE.solar._autonomyUnitPrev === 'hours'){
+    input.value = String(Math.round(cur / 24 * 100) / 100);
+  }
+  STATE.solar._autonomyUnitPrev = newUnit;
+  if(tag) tag.textContent = newUnit === 'hours' ? 'h' : 'd';
+  recalcSolar();
+}
+
 function recalcSolar(){
   const g = id => document.getElementById(id);
   const dailyEnergy = parseFloat(g('s_dailyEnergy').value) || 0;
@@ -426,7 +453,9 @@ function recalcSolar(){
   const sunHours = parseFloat(g('s_sunHours').value) || 1;
   const sysEff = parseFloat(g('s_sysEff').value) || 1;
   const panelWp = parseFloat(g('s_panelWp').value) || 1;
-  const autonomy = parseFloat(g('s_autonomy').value) || 1;
+  const autonomyRaw = parseFloat(g('s_autonomy').value) || 1;
+  const autonomyUnit = g('s_autonomyUnit') ? g('s_autonomyUnit').value : 'days';
+  const autonomy = autonomyUnit === 'hours' ? (autonomyRaw / 24) : autonomyRaw;
   const battV = parseFloat(g('s_battV').value) || 12;
   const dod = parseFloat(g('s_dod').value) || 50;
   const battEff = parseFloat(g('s_battEff').value) || 85;
@@ -477,7 +506,7 @@ function recalcSolar(){
 
   // Store latest computed results for PDF report generation
   STATE.solar._computed = {
-    dailyEnergy, safety, peakLoad, sunHours, sysEff, panelWp, autonomy, battV, dod, battEff, battUnit, surge, pf,
+    dailyEnergy, safety, peakLoad, sunHours, sysEff, panelWp, autonomy, autonomyRaw, autonomyUnit, battV, dod, battEff, battUnit, surge, pf,
     adjEnergy, reqArrayWp, panelsNeeded, reqAh, battCount, inverterVA: inverterRecommended,
     battInvCurrent, battWire: battWire.size, battBreaker, pvCurrent, pvWire: pvWire.size, pvBreaker,
   };
@@ -981,7 +1010,7 @@ function downloadSolarPdf(){
       <tr><td>${L('solarPanelWp')}</td><td>${cc.panelWp} Wp</td></tr>
       <tr><td>${L('solarReqArrayWp')}</td><td>${fmt(cc.reqArrayWp,0)} Wp</td></tr>
       <tr><td>${L('solarPanelsNeeded')}</td><td>${cc.panelsNeeded} × ${cc.panelWp} Wp</td></tr>
-      <tr><td>${L('solarAutonomy')}</td><td>${cc.autonomy} d</td></tr>
+      <tr><td>${L('solarAutonomy')}</td><td>${cc.autonomyRaw ?? cc.autonomy} ${cc.autonomyUnit === 'hours' ? 'h' : 'd'}${cc.autonomyUnit === 'hours' ? ` (${fmt(cc.autonomy,2)} d)` : ''}</td></tr>
       <tr><td>${L('solarBattVoltage')}</td><td>${cc.battV} V</td></tr>
       <tr><td>${L('solarDOD')}</td><td>${cc.dod}%</td></tr>
       <tr><td>${L('solarReqAh')}</td><td>${fmt(cc.reqAh,0)} Ah</td></tr>
